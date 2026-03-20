@@ -13,13 +13,14 @@ dependencies {
     //compileOnly(project(":nms:v1_21_R3"))
 }
 
-
 tasks {
     assemble {
         dependsOn(reobfJar)
     }
+
     compileJava {
         options.encoding = "UTF-8"
+        options.release.set(21)
     }
 }
 

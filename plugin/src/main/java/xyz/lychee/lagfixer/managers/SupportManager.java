@@ -155,7 +155,7 @@ public class SupportManager extends AbstractManager implements Listener {
         }
         try {
             if (this.executor != null) {
-                this.executor.close();
+                this.executor.shutdown();
             }
         }
         catch (Throwable ignored) {}

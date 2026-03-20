@@ -12,13 +12,14 @@ dependencies {
     compileOnly(project(":plugin"))
 }
 
-
 tasks {
     assemble {
         dependsOn(reobfJar)
     }
+
     compileJava {
         options.encoding = "UTF-8"
+        options.release.set(21)
     }
 }
 
