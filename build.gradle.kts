@@ -48,7 +48,7 @@ tasks {
         archiveVersion.set("")
 
         relocate("net.kyori", "xyz.lychee.lagfixer.libs.kyori")
-        destinationDirectory.set(file("C:/Users/lajczi/Desktop/testowy/plugins"))  // Nowa lokalizacja
+        destinationDirectory.set(file("C:/Users/lajczi/Desktop/testowy/plugins"))
     }
 }
 
