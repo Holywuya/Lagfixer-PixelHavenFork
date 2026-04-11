@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id("java-library")
     id("com.gradleup.shadow")
 }
 
@@ -29,7 +29,7 @@ dependencies {
     compileOnly("com.bgsoftware:WildStackerAPI:2025.2")
     compileOnly("dev.rosewood:rosestacker:1.5.38")
     compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.9")
-    compileOnly("io.lumine:Mythic-Dist:5.6.1")
+    compileOnly("io.lumine:Mythic-Dist:5.9.5")
     compileOnly("com.songoda:UltimateStacker-API:1.0.0-SNAPSHOT")
     compileOnly("uk.antiperson.stackmob:StackMob:5.10.3")
     compileOnly("io.github.arcaneplugins:levelledmobs-plugin:4.0.3.1")
@@ -55,5 +55,13 @@ tasks {
             expand(project.properties)
         }
         outputs.upToDateWhen { false }
+    }
+}
+
+configurations {
+    compileClasspath {
+        attributes {
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+        }
     }
 }

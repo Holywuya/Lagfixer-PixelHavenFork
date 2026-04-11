@@ -1,6 +1,6 @@
 plugins {
-    id("java")
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
+    id("java-library")
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
 }
 
 repositories {
@@ -22,12 +22,7 @@ tasks {
     }
 
     compileJava {
-        options.encoding = "UTF-8"
-        options.release.set(21)
+        options.encoding = Charsets.UTF_8.name()
+        options.release = 21
     }
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
 }

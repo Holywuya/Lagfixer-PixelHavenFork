@@ -1,6 +1,6 @@
 plugins {
-    id("java")
-    id("com.gradleup.shadow") version "9.3.0"
+    id("java-library")
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 val spigotRepo = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/";
@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":nms:v1_21_R5"))
     implementation(project(":nms:v1_21_R6"))
     implementation(project(":nms:v1_21_R7"))
+    implementation(project(":nms:v26_1", "shadow"))
 
     implementation(project(":support:common"))
     implementation(project(":support:spigot"))
@@ -53,14 +54,13 @@ tasks {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 allprojects {
     group = "xyz.lychee";
 
-    apply(plugin = "java")
+    apply(plugin = "java-library")
 
     repositories {
         mavenLocal()
@@ -73,31 +73,18 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.projectlombok:lombok:1.18.32")
-        annotationProcessor("org.projectlombok:lombok:1.18.32")
+        compileOnly("org.projectlombok:lombok:1.18.44")
+        annotationProcessor("org.projectlombok:lombok:1.18.44")
     }
 
     java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
-        }
-
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    configurations {
-        compileClasspath {
-            attributes {
-                attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
-            }
-        }
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 
     tasks {
         compileJava {
-            options.encoding = "UTF-8"
-            options.release.set(8)
+            options.encoding = Charsets.UTF_8.name()
+            options.release = 8
         }
     }
 }

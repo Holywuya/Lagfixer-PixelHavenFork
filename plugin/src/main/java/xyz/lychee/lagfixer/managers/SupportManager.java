@@ -52,8 +52,10 @@ public class SupportManager extends AbstractManager implements Listener {
         instance = this;
 
         this.versions = new HashMap<>();
+
         this.versions.put("1.20.5", "v1_20_R4");
         this.versions.put("1.20.6", "v1_20_R4");
+
         this.versions.put("1.21", "v1_21_R1");
         this.versions.put("1.21.1", "v1_21_R1");
         this.versions.put("1.21.2", "v1_21_R2");
@@ -66,6 +68,8 @@ public class SupportManager extends AbstractManager implements Listener {
         this.versions.put("1.21.9", "v1_21_R6");
         this.versions.put("1.21.10", "v1_21_R6");
         this.versions.put("1.21.11", "v1_21_R7");
+
+        this.versions.put("26.1", "v26_1");
     }
 
     @Override
@@ -90,6 +94,14 @@ public class SupportManager extends AbstractManager implements Listener {
 
         Server server = Bukkit.getServer();
         String version = server.getBukkitVersion().split("-")[0];
+
+        if (!version.startsWith("1.")) {
+            String[] parts = version.split("\\.");
+            if (parts.length >= 2) {
+                version = parts[0] + "." + parts[1];
+            }
+        }
+
         if (this.versions.containsKey(version)) {
             this.nmsVersion = this.versions.get(version);
         } else {
@@ -113,8 +125,8 @@ public class SupportManager extends AbstractManager implements Listener {
 
             this.getPlugin().getLogger().info(" &8• &rLoaded nms support ~ " + this.nms.getClass().getCanonicalName());
         } catch (Throwable ex) {
-            this.getPlugin().getLogger().info("   &cOptimal support not found, the plugin will use reflection methods!");
-            this.getPlugin().getLogger().info("   &7Supported versions: &e1.16.5, 1.17.1, 1.18.2, 1.19.4, 1.20 - 1.21.10");
+            this.getPlugin().getLogger().info("   &cOptimal support for "+this.nmsVersion+" not found, the plugin will use reflection methods!");
+            this.getPlugin().getLogger().info("   &7Supported versions: &e1.16.5, 1.17.1, 1.18.2, 1.19.4, 1.20 - 26.1.2");
             this.nms = new DeprecatedBukkitSupport(this.getPlugin());
         }
 
