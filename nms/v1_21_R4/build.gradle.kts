@@ -17,9 +17,4 @@ tasks {
     assemble {
         dependsOn(reobfJar)
     }
-
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release = 21
-    }
 }

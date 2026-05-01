@@ -39,8 +39,7 @@ public class MapCommand extends CommandManager.Subcommand {
                 this.mapHandler = new MapHandler(this.getCommandManager().getPlugin());
                 this.mapHandler.load();
             } catch (Throwable ignored) {}
-        }
-        else if (this.mapHandler != null) {
+        } else if (this.mapHandler != null) {
             this.mapHandler.unload();
             this.mapHandler = null;
         }

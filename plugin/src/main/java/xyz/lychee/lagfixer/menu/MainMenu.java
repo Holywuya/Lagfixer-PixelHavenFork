@@ -14,7 +14,7 @@ import xyz.lychee.lagfixer.managers.SupportManager;
 import xyz.lychee.lagfixer.objects.AbstractMenu;
 import xyz.lychee.lagfixer.objects.AbstractModule;
 import xyz.lychee.lagfixer.objects.AbstractMonitor;
-import xyz.lychee.lagfixer.objects.AbstractSupportNms;
+import xyz.lychee.lagfixer.objects.ISupportNms;
 import xyz.lychee.lagfixer.utils.ItemBuilder;
 import xyz.lychee.lagfixer.utils.MessageUtils;
 
@@ -69,7 +69,7 @@ public class MainMenu extends AbstractMenu {
         );
 
         int chunks = 0, tiles = 0;
-        AbstractSupportNms nms = support.getNms();
+        ISupportNms nms = support.getNms();
         for (World w : Bukkit.getWorlds()) {
             Chunk[] loaded = w.getLoadedChunks();
             chunks += loaded.length;

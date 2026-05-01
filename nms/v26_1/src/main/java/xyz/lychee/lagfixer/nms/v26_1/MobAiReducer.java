@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.bee.Bee;
@@ -132,11 +132,15 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
 
                 if (isAnimal && module.isBreedEnabled() && goalClass == BreedGoal.class) {
                     toRemove.add(pgw);
+                    pgw.stop();
+
                     toAdd.add(new WrappedGoal(pgw.getPriority(), new OptimizedBreedGoal((Animal) handle)));
                     continue;
                 }
                 if (module.isTemptEnabled() && goalClass == TemptGoal.class && temptTargeting != null) {
                     toRemove.add(pgw);
+                    pgw.stop();
+
                     toAdd.add(new WrappedGoal(pgw.getPriority(), new OptimizedTemptGoal(handle, temptTargeting)));
                     continue;
                 }
@@ -144,6 +148,7 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
                 String simpleName = goalClass.getSimpleName();
                 if (aiList.stream().anyMatch(simpleName::contains) == aiListMode) {
                     toRemove.add(pgw);
+                    pgw.stop();
                 }
             }
 

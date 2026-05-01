@@ -1,6 +1,7 @@
 package xyz.lychee.lagfixer.nms.v26_1;
 
-import net.minecraft.world.entity.vehicle.*;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.entity.vehicle.boat.ChestBoat;
 import net.minecraft.world.entity.vehicle.boat.ChestRaft;

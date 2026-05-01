@@ -1,179 +1,126 @@
 package xyz.lychee.lagfixer.objects;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.Chunk;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import xyz.lychee.lagfixer.LagFixer;
-import xyz.lychee.lagfixer.Language;
-import xyz.lychee.lagfixer.managers.ModuleManager;
-import xyz.lychee.lagfixer.menu.ConfigMenu;
-import xyz.lychee.lagfixer.utils.ItemBuilder;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Stream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class StandardMonitor {
-    private final LagFixer plugin;
-    private final ModuleManager manager;
-    private final HashSet<String> worlds = new HashSet<>();
-    private final Impact impact;
-    private final String name;
-    private final String[] description;
-    private final ItemStack baseSkull;
-    private final YamlConfiguration config;
-    private final ConfigMenu menu;
-    private ConfigurationSection section;
-    private boolean loaded = false;
-    private Language language;
-    private int canContinue;
+public class ReflectionSupportNms implements ISupportNms {
+    private Method getServerMethod;
+    private Field recentTpsField;
+    private Method setProfileMethod;
+    private Field profileField;
+    private Method getHandleMethod;
+    private Field pingField;
 
-    public StandardMonitor(LagFixer plugin, ModuleManager manager, Impact impact, String name, String[] description, String texture) {
-        this.plugin = plugin;
-        this.manager = manager;
-        this.impact = impact;
-        this.name = name;
-        this.description = description;
-        this.baseSkull = ItemBuilder.createSkull(texture).build();
-        this.config = new YamlConfiguration();
-        this.language = new Language(this);
+    public ReflectionSupportNms() {
+        try {
+            Object craftServer = Bukkit.getServer();
+            getServerMethod = craftServer.getClass().getMethod("getServer");
+            Object minecraftServer = getServerMethod.invoke(craftServer);
+            recentTpsField = minecraftServer.getClass().getField("recentTps");
+        } catch (Exception ignored) {}
+
+        ItemMeta tempMeta = Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
+        if (tempMeta != null) {
+            try {
+                setProfileMethod = tempMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                setProfileMethod.setAccessible(true);
+            } catch (NoSuchMethodException ignored) {}
+
+            try {
+                profileField = tempMeta.getClass().getDeclaredField("profile");
+                profileField.setAccessible(true);
+            } catch (NoSuchFieldException ignored) {}
+        }
+    }
+
+    @Override
+    public double getTps() {
+        if (getServerMethod == null || recentTpsField == null) return -1;
+
+        int index = 2;
+        try {
+            Object craftServer = Bukkit.getServer();
+            Object minecraftServer = getServerMethod.invoke(craftServer);
+            if (minecraftServer == null) return -1;
+
+            double[] tps = (double[]) recentTpsField.get(minecraftServer);
+            if (index >= tps.length) index = 0;
+            return Math.min(20.0, tps[index]);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public ItemStack createSkull(String base64) {
+        ItemStack is = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta meta = is.getItemMeta();
+        if (meta == null) return is;
 
         try {
-            this.loadConfigSection();
-        } catch (Exception ex) {
-            this.plugin.printError(ex);
+            UUID uuid = UUID.randomUUID();
+            GameProfile profile = new GameProfile(uuid, uuid.toString().substring(0, 8));
+            profile.getProperties().put("textures", new Property("textures", base64));
+
+            if (setProfileMethod != null) {
+                try {
+                    setProfileMethod.invoke(meta, profile);
+                    is.setItemMeta(meta);
+                    return is;
+                } catch (Throwable ignored) {}
+            }
+
+            if (profileField != null) {
+                try {
+                    profileField.set(meta, profile);
+                    is.setItemMeta(meta);
+                    return is;
+                } catch (Throwable ignored) {}
+            }
+
+            return is;
+        } catch (Throwable ignored) {
+            return is;
         }
-
-        ConfigurationSection defSection = this.section.getDefaultSection() == null ? this.section : this.section.getDefaultSection();
-
-        long valueCount = defSection.getValues(true).entrySet().stream()
-                .filter(e -> !(e.getValue() instanceof ConfigurationSection))
-                .count();
-
-        int size = (int) Math.max(9, Math.min(45, ((valueCount + 8) / 9) * 9)) + 9;
-
-        this.menu = new ConfigMenu(this.plugin, defSection, size, this);
     }
 
-    public boolean loadAllConfig() throws Exception {
-        this.loadConfigSection();
-        this.language.loadMessages();
-        return this.loadConfig();
+    @Override
+    public int getTileEntitiesCount(Chunk chunk) {
+        return 0;
     }
 
-    public void loadConfigSection() throws Exception {
-        this.loadConfigFile();
-
-        this.section = this.config.getConfigurationSection(this.name + ".values");
-
-        this.worlds.clear();
-        this.worlds.addAll(this.config.getStringList(this.name + ".worlds"));
-        this.canContinue = this.worlds.isEmpty() ? -1 : this.worlds.contains("*") ? 1 : 0;
-    }
-
-    public void loadConfigFile() throws Exception {
-        String resourcePath = "modules/" + this.name + ".yml";
-
-        InputStream defStream = this.plugin.getResource(resourcePath);
-        if (defStream == null) {
-            this.plugin.getLogger().warning("Couldn't find config file " + this.name + ".yml in resources");
-            return;
-        }
-
-        YamlConfiguration defaultConfig;
-        try (InputStreamReader r = new InputStreamReader(defStream, StandardCharsets.UTF_8)) {
-            defaultConfig = YamlConfiguration.loadConfiguration(r);
-        }
-
-        File configFile = new File(this.plugin.getDataFolder(), resourcePath);
-
-        if (configFile.exists()) {
-            this.config.load(configFile);
-            this.config.setDefaults(defaultConfig);
-            this.config.options().copyDefaults(true);
-            this.config.save(configFile);
-            return;
-        }
-
-        File parent = configFile.getParentFile();
-        if (!parent.exists() && !parent.mkdirs()) {
-            this.plugin.getLogger().warning("Could not create directory: " + parent);
-        }
-
-        FileConfiguration mainCfg = this.plugin.getConfig();
-        String sectionPath = "modules." + this.name;
-        if (mainCfg.isConfigurationSection(sectionPath)) {
-            ConfigurationSection section = mainCfg.getConfigurationSection(sectionPath);
-            if (section != null) {
-                this.config.set(this.name, section);
-                this.config.setDefaults(defaultConfig);
-                this.config.options().copyDefaults(true);
-                this.config.save(configFile);
-
-                mainCfg.set(sectionPath, "Configuration has been moved to \"LagFixer/modules/" + this.name + ".yml\"");
-                return;
+    @Override
+    public int getPlayerPing(Player player) {
+        if (getHandleMethod == null || pingField == null) {
+            try {
+                getHandleMethod = player.getClass().getMethod("getHandle");
+                Object entityPlayer = getHandleMethod.invoke(player);
+                pingField = entityPlayer.getClass().getField("ping");
+                pingField.setAccessible(true);
+            } catch (Exception e) {
+                return -1;
             }
         }
 
-        this.plugin.saveResource(resourcePath, false);
-        this.config.load(configFile);
-        this.config.setDefaults(defaultConfig);
-        this.config.options().copyDefaults(true);
-        this.config.save(configFile);
-    }
-
-    public boolean canContinue(World w) {
-        return this.canContinue == 0 ? this.worlds.contains(w.getName()) : this.canContinue == 1;
-    }
-
-    public Stream<World> getAllowedWorldsStream() {
-        return Bukkit.getWorlds().stream().filter(this::canContinue);
-    }
-
-    public Set<World> getAllowedWorlds() {
-        HashSet<World> set = new HashSet<>();
-        for (World world : Bukkit.getWorlds()) {
-            if (this.canContinue(world)) {
-                set.add(world);
-            }
-        }
-        return Collections.unmodifiableSet(set);
-    }
-
-    public abstract void load() throws Exception;
-
-    public abstract boolean loadConfig() throws Exception;
-
-    public abstract void disable() throws Exception;
-
-    @Getter
-    public enum Impact {
-        VERY_HIGH("<bold><gradient:#069e00:#0aff00>VERY HIGH</gradient>"),
-        HIGH("<bold><gradient:#1fab1a:#3dff2b>HIGH</gradient>"),
-        MEDIUM("<bold><gradient:#a6ab1a:#ffe32b>MEDIUM</gradient>"),
-        LOW("<bold><gradient:#ab591a:#ff6b2b>LOW</gradient>"),
-        VERY_LOW("<bold><gradient:#ab1e1a:#ff322b>VERY LOW</gradient>"),
-        VISUAL_ONLY("<bold><gradient:#1a5eab:#26baff>VISUAL ONLY</gradient>");
-
-        private final Component component;
-
-        Impact(String text) {
-            this.component = MiniMessage.miniMessage().deserialize(text);
+        try {
+            Object handle = getHandleMethod.invoke(player);
+            return pingField.getInt(handle);
+        } catch (Exception e) {
+            return -1;
         }
     }
 }
-

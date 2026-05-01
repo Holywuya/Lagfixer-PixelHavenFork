@@ -54,7 +54,7 @@ public abstract class AbstractModule {
 
         try {
             this.loadConfigSection();
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             this.plugin.printError(ex);
         }
 

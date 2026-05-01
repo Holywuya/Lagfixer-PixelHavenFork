@@ -2,7 +2,6 @@ package xyz.lychee.lagfixer.nms.v1_17_R1;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -11,18 +10,12 @@ import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import xyz.lychee.lagfixer.objects.AbstractSupportNms;
+import xyz.lychee.lagfixer.objects.ReflectionSupportNms;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-public class SupportNms extends AbstractSupportNms {
-    public SupportNms(Plugin plugin) {
-        super(plugin);
-    }
-
+public class SupportNms extends ReflectionSupportNms {
     @Override
     public ItemStack createSkull(String base64) {
         ItemStack is = new ItemStack(Material.PLAYER_HEAD);
@@ -41,8 +34,8 @@ public class SupportNms extends AbstractSupportNms {
             mtd.invoke(meta, gameProfile);
             is.setItemMeta(meta);
             return is;
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            return is;
+        } catch (Throwable ex) {
+            return super.createSkull(base64);
         }
     }
 

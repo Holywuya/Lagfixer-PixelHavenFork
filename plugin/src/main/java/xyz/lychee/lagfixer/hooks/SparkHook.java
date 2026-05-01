@@ -14,7 +14,7 @@ import xyz.lychee.lagfixer.managers.ErrorsManager;
 import xyz.lychee.lagfixer.managers.HookManager;
 import xyz.lychee.lagfixer.managers.SupportManager;
 import xyz.lychee.lagfixer.objects.AbstractHook;
-import xyz.lychee.lagfixer.objects.AbstractMonitor;
+import xyz.lychee.lagfixer.objects.MXBeanMonitor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,27 +49,27 @@ public class SparkHook extends AbstractHook {
         }
     }
 
-    static class SparkMonitor extends AbstractMonitor {
+    static class SparkMonitor extends MXBeanMonitor {
         private final Spark spark = SparkProvider.get();
 
         @Override
-        protected double cpuProcess() {
+        public double cpuProcess() {
             return this.spark.cpuProcess().poll(StatisticWindow.CpuUsage.SECONDS_10) * 100.0;
         }
 
         @Override
-        protected double cpuSystem() {
+        public double cpuSystem() {
             return this.spark.cpuSystem().poll(StatisticWindow.CpuUsage.SECONDS_10) * 100.0;
         }
 
         @Override
-        protected double tps() {
+        public double tps() {
             DoubleStatistic<StatisticWindow.TicksPerSecond> tps = this.spark.tps();
             return tps == null ? 20.0 : tps.poll(StatisticWindow.TicksPerSecond.SECONDS_10);
         }
 
         @Override
-        protected double mspt() {
+        public double mspt() {
             GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> mspt = this.spark.mspt();
             return mspt == null ? 0.0 : mspt.poll(StatisticWindow.MillisPerTick.SECONDS_10).median();
         }

@@ -14,17 +14,12 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import xyz.lychee.lagfixer.objects.AbstractSupportNms;
+import xyz.lychee.lagfixer.objects.ReflectionSupportNms;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-public class SupportNms extends AbstractSupportNms {
-    public SupportNms(Plugin plugin) {
-        super(plugin);
-    }
+public class SupportNms extends ReflectionSupportNms {
 
     @Override
     public ItemStack createSkull(String base64) {
@@ -33,7 +28,7 @@ public class SupportNms extends AbstractSupportNms {
         if (meta == null) {
             return is;
         }
-        
+
         try {
             UUID uuid = UUID.randomUUID();
             GameProfile gameProfile = new GameProfile(
@@ -43,14 +38,14 @@ public class SupportNms extends AbstractSupportNms {
             );
 
             ResolvableProfile resolvableProfile = ResolvableProfile.createResolved(gameProfile);
-            
+
             Method mtd = meta.getClass().getDeclaredMethod("setProfile", ResolvableProfile.class);
             mtd.setAccessible(true);
             mtd.invoke(meta, resolvableProfile);
             is.setItemMeta(meta);
             return is;
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            return is;
+        } catch (Throwable ex) {
+            return super.createSkull(base64);
         }
     }
 

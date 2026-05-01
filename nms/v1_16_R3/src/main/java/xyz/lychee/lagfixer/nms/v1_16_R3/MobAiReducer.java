@@ -64,7 +64,7 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
 
     @Override
     public void optimize(org.bukkit.entity.Entity ent, boolean init) {
-        if (!(ent instanceof CraftCreature)) return;
+        if (!(ent instanceof CraftCreature) || this.fieldGoals == null) return;
 
         EntityCreature handle = ((CraftCreature) ent).getHandle();
         if (this.optimizedMobs.containsKey(handle)) return;
@@ -84,8 +84,6 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
         PathfinderTargetCondition temptTargeting = module.isTemptEnabled() ?
                 this.temptTargeting.get(handleClass) : null;
 
-        if (this.fieldGoals == null) return;
-
         try {
             Set<PathfinderGoalWrapped> goals = (Set<PathfinderGoalWrapped>) this.fieldGoals.get(handle.goalSelector);
 
@@ -102,11 +100,15 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
 
                 if (isAnimal && module.isBreedEnabled() && goalClass == PathfinderGoalBreed.class) {
                     toRemove.add(pgw);
+                    pgw.d();
+
                     toAdd.add(new PathfinderGoalWrapped(pgw.h(), new OptimizedBreedGoal((EntityAnimal) handle)));
                     continue;
                 }
                 if (module.isTemptEnabled() && goalClass == PathfinderGoalTempt.class && temptTargeting != null) {
                     toRemove.add(pgw);
+                    pgw.d();
+
                     toAdd.add(new PathfinderGoalWrapped(pgw.h(), new OptimizedTemptGoal(handle, temptTargeting)));
                     continue;
                 }
@@ -114,6 +116,7 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
                 String simpleName = goalClass.getSimpleName();
                 if (aiList.stream().anyMatch(simpleName::contains) == aiListMode) {
                     toRemove.add(pgw);
+                    pgw.d();
                 }
             }
 

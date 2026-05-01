@@ -102,9 +102,6 @@ public class ErrorsManager extends AbstractManager {
         }
     }
 
-    /**
-     * Dodaje zadanie do kolejki jeśli nie ma go już w kolejce
-     */
     private void addToQueue(SendTask task) {
         for (SendTask queuedTask : sendQueue) {
             if (queuedTask.equals(task)) {

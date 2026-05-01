@@ -13,9 +13,4 @@ tasks {
     reobfJar {
         enabled = false
     }
-
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release = 25
-    }
 }

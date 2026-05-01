@@ -122,11 +122,15 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
 
                 if (isAnimal && module.isBreedEnabled() && goalClass == BreedGoal.class) {
                     toRemove.add(pgw);
+                    pgw.stop();
+
                     toAdd.add(new WrappedGoal(pgw.getPriority(), new OptimizedBreedGoal((Animal) handle)));
                     continue;
                 }
                 if (module.isTemptEnabled() && goalClass == TemptGoal.class && temptTargeting != null) {
                     toRemove.add(pgw);
+                    pgw.stop();
+
                     toAdd.add(new WrappedGoal(pgw.getPriority(), new OptimizedTemptGoal(handle, temptTargeting)));
                     continue;
                 }
@@ -134,6 +138,7 @@ public class MobAiReducer extends MobAiReducerModule.NMS implements Listener {
                 String simpleName = goalClass.getSimpleName();
                 if (aiList.stream().anyMatch(simpleName::contains) == aiListMode) {
                     toRemove.add(pgw);
+                    pgw.stop();
                 }
             }
 

@@ -34,7 +34,7 @@ public abstract class AbstractFork {
 
     public abstract boolean isSupportMspt();
 
-    public abstract PluginCommand registerCommand(Plugin var1, String var2, List<String> var3, CommandExecutor var4);
+    public abstract PluginCommand registerCommand(Plugin plugin, String name, List<String> aliases, CommandExecutor executor);
 
     public abstract BukkitTask runNow(boolean async, Location loc, Runnable runnable);
 

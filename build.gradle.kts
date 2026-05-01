@@ -9,9 +9,9 @@ val sonatypeRepo = "https://oss.sonatype.org/content/groups/public/";
 val jitpack = "https://jitpack.io"
 val mojang = "https://libraries.minecraft.net";
 
-version = "1.5.2"
+version = "1.5.3"
 extra["lagfixer_version"] = version
-extra["lagfixer_build"] = "141"
+extra["lagfixer_build"] = "142"
 
 dependencies {
     implementation(project(":plugin"))
@@ -54,7 +54,9 @@ tasks {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
 }
 
 allprojects {
@@ -73,18 +75,30 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.projectlombok:lombok:1.18.44")
-        annotationProcessor("org.projectlombok:lombok:1.18.44")
+        compileOnly("org.projectlombok:lombok:1.18.46")
+        annotationProcessor("org.projectlombok:lombok:1.18.46")
     }
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        }
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     tasks {
         compileJava {
             options.encoding = Charsets.UTF_8.name()
-            options.release = 8
+            //options.release = 8
+        }
+    }
+
+    configurations {
+        compileClasspath {
+            attributes {
+                attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+            }
         }
     }
 }
