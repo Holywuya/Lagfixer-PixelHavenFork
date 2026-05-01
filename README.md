@@ -7,12 +7,12 @@ and more enjoyable gameplay experience for all players.
 ## Requirements:
 
 - Java 8 or later
-- Server version 1.16.5 - 1.21.11
+- Server version 1.13.2 - 26.1.2
 
 ## Supported versions:
 
-- 1.16.5, 1.17.1, 1.18.2, 1.19.4, 1.20-1.21.11
-- Most modules run on a wider range of versions [1.16.5 - 1.21.11]
+- 1.16.5, 1.17.1, 1.18.2, 1.19.4, 1.20-26.1.2
+- Most modules run on a wider range of versions [1.16.5 - 26.1.2]
 - Forge based spigot forks: [Mohist](https://mohistmc.com/), [Arclight](https://github.com/IzzelAliz/Arclight) etc.
 
 <details>
