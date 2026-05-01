@@ -17,7 +17,7 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
     private volatile boolean benchmark = false;
 
     public BenchmarkCommand(CommandManager commandManager) {
-        super(commandManager, "benchmark", "run benchmark and compare it with other servers", "test");
+        super(commandManager, "benchmark", "运行基准测试并与其他服务器比较", "test");
     }
 
     @Override
@@ -29,22 +29,22 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
     @Override
     public boolean execute(@NotNull org.bukkit.command.CommandSender sender, @NotNull String[] args) {
         if (this.benchmark) {
-            return MessageUtils.sendMessage(true, sender, "&7Benchmark is running, wait for results in console!");
+            return MessageUtils.sendMessage(true, sender, "&7基准测试正在运行，请在控制台等待结果！");
         }
 
         AbstractMonitor monitor = SupportManager.getInstance().getMonitor();
         if (monitor.getMspt() > 10.0) {
-            return MessageUtils.sendMessage(true, sender, "&7Server MSPT is too &chigh&7, the result may be incorrect!");
+            return MessageUtils.sendMessage(true, sender, "&7服务器 MSPT 过&c高&7，结果可能不准确！");
         }
 
         long availableRam = monitor.getRamFree() + (monitor.getRamMax() - monitor.getRamTotal());
         if (availableRam < 2048) {
-            return MessageUtils.sendMessage(true, sender, "&7Server available RAM is too low, you need &c" + availableRam + "&8/&c2048MB");
+            return MessageUtils.sendMessage(true, sender, "&7服务器可用内存不足，需要 &c" + availableRam + "&8/&c2048MB");
         }
 
         BukkitTask task = SupportManager.getInstance().getFork().runTimer(true, () -> {
             if (this.benchmark) {
-                MessageUtils.sendMessage(true, sender, "&7Async benchmark in progress, wait for results...");
+                MessageUtils.sendMessage(true, sender, "&7异步基准测试进行中，请等待结果...");
             }
         }, 1, 2, TimeUnit.SECONDS);
 
@@ -61,10 +61,10 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
                 String result = b.getResult().toString();
                 ErrorsManager.getInstance().sendBenchmark(b);
 
-                MessageUtils.sendMessage(true, sender, "&7Benchmark done in &f" + t.stop().getExecutingTime() + "&7ms, results:&f" + result);
+                MessageUtils.sendMessage(true, sender, "&7基准测试完成，耗时 &f" + t.stop().getExecutingTime() + "&7ms，结果：&f" + result);
                 this.getCommandManager().getPlugin().getLogger().info(result);
             } catch (Exception e) {
-                MessageUtils.sendMessage(true, sender, "&cBenchmark error: " + e.getMessage());
+                MessageUtils.sendMessage(true, sender, "&c基准测试错误：" + e.getMessage());
             }
             this.benchmark = false;
         });
@@ -78,7 +78,7 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
     public Benchmark runBenchmarks(int warmup, int cpu, int arrayLength, int memoryPasses) {
         Benchmark benchmark = new Benchmark(cpu);
 
-        benchmark.getResult().append("\n \n&8&m    &r&8[ &eLagFixer Advanced CPU Benchmark &8]&m    &r\n ");
+        benchmark.getResult().append("\n \n&8&m    &r&8[ &eLagFixer 高级 CPU 基准测试 &8]&m    &r\n ");
         for (int i = 0; i < warmup; i++) {
             cpuTest(1_000_000);
         }
@@ -101,9 +101,9 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
         }
 
         benchmark.getResult()
-                .append("\n &8• &fAverage performance: &e").append(totalScore / cpu).append(" Gop/s")
-                .append("\n &8• &fBest time: &e").append(bestScore / 1_000_000_000D).append(" s")
-                .append("\n &8• &fWorst time: &e").append(worstScore / 1_000_000_000D).append(" s");
+                .append("\n &8• &f平均性能：&e").append(totalScore / cpu).append(" Gop/s")
+                .append("\n &8• &f最佳时间：&e").append(bestScore / 1_000_000_000D).append(" s")
+                .append("\n &8• &f最差时间：&e").append(worstScore / 1_000_000_000D).append(" s");
 
         benchmark.setCpu_checksum(checksum);
         benchmark.setTotalScore(totalScore / cpu);
@@ -111,7 +111,7 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
         benchmark.setWorstScore(worstScore);
 
         // RAM Benchmark
-        benchmark.getResult().append("\n \n&8&m    &r&8[ &eLagFixer Advanced RAM Benchmark &8]&m    &r\n ");
+        benchmark.getResult().append("\n \n&8&m    &r&8[ &eLagFixer 高级 RAM 基准测试 &8]&m    &r\n ");
 
         long[] array = new long[arrayLength];
         int[] randomIndices = new int[arrayLength];
@@ -131,7 +131,7 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
             writeTime += System.nanoTime() - start;
         }
         double writeSpeed = (arrayLength * 4D * memoryPasses) / (1024D * 1024D) / (writeTime / 1_000_000_000D);
-        benchmark.getResult().append(String.format("\n &8• &fSequential write: &e%.2f MB/s", writeSpeed));
+        benchmark.getResult().append(String.format("\n &8• &f顺序写入：&e%.2f MB/s", writeSpeed));
         benchmark.setWriteSpeed(writeSpeed);
 
         // Sequential Read
@@ -145,7 +145,7 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
             readTime += System.nanoTime() - start;
         }
         double readSpeed = (arrayLength * 4D * memoryPasses) / (1024D * 1024D) / (readTime / 1_000_000_000D);
-        benchmark.getResult().append(String.format("\n &8• &fSequential read: &e%.2f MB/s", readSpeed));
+        benchmark.getResult().append(String.format("\n &8• &f顺序读取：&e%.2f MB/s", readSpeed));
         benchmark.setReadSpeed(readSpeed);
 
         // Random Access
@@ -159,7 +159,7 @@ public class BenchmarkCommand extends CommandManager.Subcommand {
             randomTime += System.nanoTime() - start;
         }
         double randomSpeed = (arrayLength * 4D * memoryPasses) / (1024D * 1024D) / (randomTime / 1_000_000_000D);
-        benchmark.getResult().append(String.format("\n &8• &fRandom access: &e%.2f MB/s\n ", randomSpeed));
+        benchmark.getResult().append(String.format("\n &8• &f随机访问：&e%.2f MB/s\n ", randomSpeed));
         benchmark.setRandomSpeed(randomSpeed);
 
         return benchmark;

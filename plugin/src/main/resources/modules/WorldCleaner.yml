@@ -1,44 +1,44 @@
 WorldCleaner:
   enabled: true
-  worlds: # Use '*' to enable for all worlds.
+  worlds: # 使用 '*' 启用所有世界。
     - world
     - world_the_end
     - world_nether
   values:
-    interval: 600 # Interval (in seconds) between WorldCleaner runs.
+    interval: 600 # WorldCleaner 运行的间隔（秒）。
     alerts:
       enabled: true
-      permission: "" # Leave empty to disable permission.
-      actionbar: false # Temporary message above the hotbar
+      permission: "" # 留空以禁用权限。
+      actionbar: false # 快捷栏上方的临时消息
       message: true
 
-    # Command: /lagfixer clear items
+    # 命令：/lagfixer clear items
     items:
       enabled: true
-      disable_item_despawn: false # If true, LagFixer will handle item despawning instead of Bukkit.
-      time_lived: 10000 # Minimum time (in ms) an item must exist before removal (-1 to disable).
-      blacklist: # Materials: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+      disable_item_despawn: false # 若为 true，LagFixer 将代替 Bukkit 处理物品消失。
+      time_lived: 10000 # 物品被移除前必须存在的最短时间（毫秒）（-1 禁用）。
+      blacklist: # 材质：https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
         - BEACON
-      abyss: # The abyss stores deleted items, which players can retrieve via /abyss.
+      abyss: # 深渊存储被删除的物品，玩家可通过 /abyss 取回。
         enabled: false
-        alerts: true # Configurable in lang.yml.
-        permission: "" # Leave empty to disable permission.
-        item_despawn: true # If true, adds items to abyss when they despawn.
-        close: 60 # Clears abyss inventory and disables the command after this time.
-        blacklist: # Materials: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+        alerts: true # 在 lang.yml 中配置。
+        permission: "" # 留空以禁用权限。
+        item_despawn: true # 若为 true，物品消失时添加到深渊。
+        close: 60 # 此时间后清空深渊物品栏并禁用命令。
+        blacklist: # 材质：https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
           - BEDROCK
           - BEACON
 
-    # Command: /lagfixer clear creatures
+    # 命令：/lagfixer clear creatures
     creatures:
       enabled: true
-      named: false        # If "true" removes named creatures
-      drop_items: false   # If "true" drops items when removing creatures
-      stacked: true       # If "true" removes stacked entities (WildStacker, RoseStacker and UltimateStacker hook)
-      levelled: true      # If "true" removes levelled mobs (LevelledMobs hook)
-      ignore_models: true # If "true" keeps entities from ModelEngine or MythicMobs
-      list_mode: true     # If "true" only listed entities will be removed; if false, all unlisted entities will be removed
-      list: # Allowed creatures: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+      named: false        # 若为"true"移除有名称的生物
+      drop_items: false   # 若为"true"移除生物时掉落物品
+      stacked: true       # 若为"true"移除堆叠实体（WildStacker、RoseStacker 和 UltimateStacker 钩子）
+      levelled: true      # 若为"true"移除等级生物（LevelledMobs 钩子）
+      ignore_models: true # 若为"true"保留 ModelEngine 或 MythicMobs 的实体
+      list_mode: true     # 若为"true"仅移除列表中的实体；若为 false，移除所有未列出的实体
+      list: # 允许的生物：https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
         - BAT
         - ZOMBIE
         - SKELETON
@@ -54,11 +54,11 @@ WorldCleaner:
         - PUFFERFISH
         - TROPICAL_FISH
 
-    # Command: /lagfixer clear projectiles (e.g., arrows, snowballs)
+    # 命令：/lagfixer clear projectiles（如箭、雪球）
     projectiles:
       enabled: true
-      list_mode: true # If "true" only listed entities will be removed; if false, all unlisted entities will be removed
-      list: # Projectiles: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+      list_mode: true # 若为"true"仅移除列表中的实体；若为 false，移除所有未列出的实体
+      list: # 抛射物：https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
         - EGG
         - SNOWBALL
         - ARROW

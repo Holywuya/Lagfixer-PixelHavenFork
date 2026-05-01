@@ -28,7 +28,7 @@ public class MapCommand extends CommandManager.Subcommand {
     private MapHandler mapHandler;
 
     public MapCommand(CommandManager commandManager) {
-        super(commandManager, "map", "server load map monitor with mspt chart");
+        super(commandManager, "map", "服务器负载地图监控器，含 MSPT 图表");
     }
 
     @Override
@@ -56,10 +56,10 @@ public class MapCommand extends CommandManager.Subcommand {
     public boolean execute(@NotNull org.bukkit.command.CommandSender sender, @NotNull String[] args) {
         if (this.mapHandler == null) {
             MessageUtils.sendMessage(true, sender,
-                    "&7The map is currently unavailable." +
-                            "\nYou need to add the &e&n-Djava.awt.headless=true&7 flag when starting the application to resolve the issue." +
-                            "\nThis will enable headless mode and avoid the X11 display connection problem." +
-                            "\nPlease restart the server with this flag and check if the issue persists.");
+                    "&7地图当前不可用。" +
+                            "\n你需要在启动应用时添加 &e&n-Djava.awt.headless=true&7 标志来解决此问题。" +
+                            "\n这将启用无头模式并避免 X11 显示连接问题。" +
+                            "\n请使用此标志重启服务器并检查问题是否仍然存在。");
             return false;
         }
 
@@ -131,7 +131,7 @@ public class MapCommand extends CommandManager.Subcommand {
 
             MapMeta meta = (MapMeta) this.mapItem.getItemMeta();
             meta.setMapView(this.mapView);
-            meta.setDisplayName(MessageUtils.fixColors(null, "&e⚡ &fServer monitor! &e⚡"));
+            meta.setDisplayName(MessageUtils.fixColors(null, "&e⚡ &f服务器监控器！ &e⚡"));
             this.mapItem.setItemMeta(meta);
 
             this.mapView.getRenderers().clear();

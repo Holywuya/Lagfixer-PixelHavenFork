@@ -10,7 +10,7 @@ import xyz.lychee.lagfixer.utils.MessageUtils;
 
 public class PingCommand extends CommandManager.Subcommand {
     public PingCommand(CommandManager commandManager) {
-        super(commandManager, "ping", "calculate average players ping");
+        super(commandManager, "ping", "计算玩家平均延迟");
     }
 
     @Override
@@ -25,10 +25,10 @@ public class PingCommand extends CommandManager.Subcommand {
         if (args.length > 0) {
             Player player = Bukkit.getPlayer(args[0]);
             if (player == null) {
-                return MessageUtils.sendMessage(true, sender, "&7Player not found on the server");
+                return MessageUtils.sendMessage(true, sender, "&7在服务器上未找到该玩家");
             }
 
-            return MessageUtils.sendMessage(true, sender, "&7" + player.getDisplayName() + "'s ping is &e" + nms.getPlayerPing(player) + "&7ms");
+            return MessageUtils.sendMessage(true, sender, "&7" + player.getDisplayName() + " 的延迟为 &e" + nms.getPlayerPing(player) + "&7ms");
         }
 
         double averagePing = Bukkit.getOnlinePlayers()
@@ -36,6 +36,6 @@ public class PingCommand extends CommandManager.Subcommand {
                 .mapToInt(nms::getPlayerPing)
                 .average()
                 .orElse(-1D);
-        return MessageUtils.sendMessage(true, sender, "&7Average players ping: &e" + averagePing);
+        return MessageUtils.sendMessage(true, sender, "&7玩家平均延迟：&e" + averagePing);
     }
 }

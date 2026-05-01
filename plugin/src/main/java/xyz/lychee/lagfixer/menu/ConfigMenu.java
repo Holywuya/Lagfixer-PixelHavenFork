@@ -27,7 +27,7 @@ public class ConfigMenu extends AbstractMenu {
     private final File configFile;
 
     public ConfigMenu(LagFixer plugin, ConfigurationSection defSection, int size, AbstractModule module) {
-        super(plugin, size, MessageUtils.fixColors(null, "&8[&e&l⚡&8] &fConfig! &8| &eLagFixer"), -1, true);
+        super(plugin, size, MessageUtils.fixColors(null, "&8[&e&l⚡&8] &f配置！ &8| &eLagFixer"), -1, true);
         this.module = module;
         this.configFile = new File(this.getPlugin().getDataFolder(), "modules/" + module.getName() + ".yml");
 
@@ -49,7 +49,7 @@ public class ConfigMenu extends AbstractMenu {
             ConfigChange change = new ConfigChange(this.module, key, currentValue);
             this.itemClickEvent(slot++, () -> {
                 List<String> lore = new ArrayList<>();
-                lore.add(MessageUtils.fixColors(null, "&7Current value:"));
+                lore.add(MessageUtils.fixColors(null, "&7当前值："));
 
                 if (currentValue instanceof Collection) {
                     for (Object obj : (Collection<?>) currentValue) {
@@ -60,14 +60,14 @@ public class ConfigMenu extends AbstractMenu {
                 }
 
                 lore.add("");
-                lore.add(MessageUtils.fixColors(null, "&bRight click for default value!"));
-                lore.add(MessageUtils.fixColors(null, "&aLeft click to change value!"));
+                lore.add(MessageUtils.fixColors(null, "&b右键点击恢复默认值！"));
+                lore.add(MessageUtils.fixColors(null, "&a左键点击修改值！"));
 
                 ItemStack item = this.module.getBaseSkull().clone();
 
                 ItemMeta meta = item.getItemMeta();
                 if (meta != null) {
-                    meta.setDisplayName(MessageUtils.fixColors(null, "&f&lKey: &e&l" + key));
+                    meta.setDisplayName(MessageUtils.fixColors(null, "&f&l键：&e&l" + key));
                     meta.setLore(lore);
                     item.setItemMeta(meta);
                 }
@@ -78,13 +78,13 @@ public class ConfigMenu extends AbstractMenu {
                 if (e.isRightClick()) {
                     Object defaultValue = change.getModule().getSection().getDefaultSection().get(change.getKey());
                     MessageUtils.sendMessage(true, human,
-                            "&fDefault value of &e" + change.getKey() + " &fis:\n &8{*} &e" + defaultValue);
+                            "&f&e" + change.getKey() + " &f的默认值为：\n &8{*} &e" + defaultValue);
                 } else {
                     human.closeInventory();
                     playerChanges.put(human.getUniqueId(), change);
-                    MessageUtils.sendMessage(true, human, "Enter new value (-cancel to cancel):");
+                    MessageUtils.sendMessage(true, human, "输入新值（-cancel 取消）：");
                     if (change.getValue() instanceof Collection) {
-                        MessageUtils.sendMessage(false, human, "&fExisting values will be toggled.");
+                        MessageUtils.sendMessage(false, human, "&f现有值将被切换。");
                     }
                 }
             });
@@ -104,7 +104,7 @@ public class ConfigMenu extends AbstractMenu {
 
         if (e.getMessage().equalsIgnoreCase("-cancel") || e.getMessage().equalsIgnoreCase("cancel")) {
             openModuleMenu(player, change.getModule());
-            MessageUtils.sendMessage(true, player, "Config editor cancelled!");
+            MessageUtils.sendMessage(true, player, "配置编辑已取消！");
             return;
         }
 
@@ -115,13 +115,13 @@ public class ConfigMenu extends AbstractMenu {
 
             Object newValue = change.getModule().getSection().get(change.getKey());
             MessageUtils.sendMessage(true, player,
-                    "&fConfiguration saved!\n &8{*} &e" + change.getValue() + " &8→ &e" + newValue);
+                    "&f配置已保存！\n &8{*} &e" + change.getValue() + " &8→ &e" + newValue);
 
             change.getModule().getMenu().updateAll();
             openModuleMenu(player, change.getModule());
 
         } catch (Exception ex) {
-            MessageUtils.sendMessage(true, player, "&cError saving configuration!");
+            MessageUtils.sendMessage(true, player, "&c保存配置时出错！");
         }
     }
 
@@ -175,10 +175,10 @@ public class ConfigMenu extends AbstractMenu {
                 if (newState) {
                     this.module.load();
                     this.module.loadAllConfig();
-                    MessageUtils.sendMessage(true, human, "Enabled module &e" + this.module.getName());
+                    MessageUtils.sendMessage(true, human, "已启用模块 &e" + this.module.getName());
                 } else {
                     this.module.disable();
-                    MessageUtils.sendMessage(true, human, "Disabled module &e" + this.module.getName());
+                    MessageUtils.sendMessage(true, human, "已禁用模块 &e" + this.module.getName());
                 }
 
                 this.module.setLoaded(newState);
@@ -187,7 +187,7 @@ public class ConfigMenu extends AbstractMenu {
 
                 this.updateAll();
             } catch (Exception ex) {
-                MessageUtils.sendMessage(true, human, "Error toggling module!");
+                MessageUtils.sendMessage(true, human, "切换模块时出错！");
                 this.getPlugin().printError(ex);
             }
         }

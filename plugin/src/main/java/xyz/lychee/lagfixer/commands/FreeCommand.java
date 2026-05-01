@@ -12,7 +12,7 @@ public class FreeCommand extends CommandManager.Subcommand {
     private boolean explicitGCDisabled = false;
 
     public FreeCommand(CommandManager commandManager) {
-        super(commandManager, "free", "run garbage collector");
+        super(commandManager, "free", "运行垃圾回收器");
     }
 
     @Override
@@ -26,7 +26,7 @@ public class FreeCommand extends CommandManager.Subcommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
         if (this.explicitGCDisabled) {
-            MessageUtils.sendMessage(true, sender, "&7Unable to free RAM, you need to remove jvm argument: &e&n-XX:+DisableExplicitGC&7!");
+            MessageUtils.sendMessage(true, sender, "&7无法释放内存，需要移除 JVM 参数：&e&n-XX:+DisableExplicitGC&7！");
             return false;
         }
 
@@ -44,12 +44,12 @@ public class FreeCommand extends CommandManager.Subcommand {
 
             long diff = before - after;
             if (diff <= 0) {
-                MessageUtils.sendMessage(true, sender, "&7No memory found to clear!");
+                MessageUtils.sendMessage(true, sender, "&7没有可清理的内存！");
                 return;
             }
 
             long freedMB = diff / (1024 * 1024);
-            MessageUtils.sendMessage(true, sender, "&7Successfully freed &e" + freedMB + " &7MB of memory.");
+            MessageUtils.sendMessage(true, sender, "&7成功释放 &e" + freedMB + " &7MB 内存。");
         });
         return true;
     }

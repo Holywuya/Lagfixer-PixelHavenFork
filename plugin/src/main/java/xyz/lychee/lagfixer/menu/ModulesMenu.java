@@ -35,16 +35,16 @@ public class ModulesMenu extends AbstractMenu {
             this.itemClickEvent(slot, () -> {
                 ItemMeta meta = is.getItemMeta();
                 if (meta != null) {
-                    meta.setDisplayName(MessageUtils.fixColors(null, "&6&l⭐ &f&lModule: &e&l" + module.getName()));
+                    meta.setDisplayName(MessageUtils.fixColors(null, "&6&l⭐ &f&l模块：&e&l" + module.getName()));
                     ArrayList<String> lore = new ArrayList<>();
 
-                    lore.add(MessageUtils.fixColors(null, " &8{*} &7Status: " + (module.isLoaded() ? "&a&lENABLED" : "&c&lDISABLED")));
-                    lore.add(MessageUtils.fixColors(null, " &8{*} &7Customizable values: &e" + module.getSection().getValues(true).values().stream().filter(obj -> !(obj instanceof ConfigurationSection)).count()));
-                    lore.add(MessageUtils.fixColors(null, " &8{*} &7Performance: " + Language.getSerializer().serialize(module.getImpact().getComponent())));
+                    lore.add(MessageUtils.fixColors(null, " &8{*} &7状态：" + (module.isLoaded() ? "&a&l已启用" : "&c&l已禁用")));
+                    lore.add(MessageUtils.fixColors(null, " &8{*} &7可配置值：&e" + module.getSection().getValues(true).values().stream().filter(obj -> !(obj instanceof ConfigurationSection)).count()));
+                    lore.add(MessageUtils.fixColors(null, " &8{*} &7性能影响：" + Language.getSerializer().serialize(module.getImpact().getComponent())));
                     lore.add("");
-                    lore.add(MessageUtils.fixColors(null, "&b&nClick to modify configuration!"));
+                    lore.add(MessageUtils.fixColors(null, "&b&n点击修改配置！"));
                     lore.add("");
-                    lore.add(MessageUtils.fixColors(null, "&eDescription:"));
+                    lore.add(MessageUtils.fixColors(null, "&e描述："));
 
                     for (String line : module.getDescription()) {
                         StringBuilder lineBuilder = new StringBuilder(" &8{*} &7");

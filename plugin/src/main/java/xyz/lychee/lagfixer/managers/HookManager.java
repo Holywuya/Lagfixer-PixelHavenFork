@@ -96,9 +96,9 @@ public class HookManager
                 TimingUtil t = TimingUtil.startNew();
                 hook.load();
                 this.addLoaded(hook);
-                this.getPlugin().getLogger().info(" &8• &rSuccessfully loaded hook " + hook.getName() + " in " + t.stop().getExecutingTime() + "ms!");
+                this.getPlugin().getLogger().info(" &8• &r成功加载钩子 " + hook.getName() + "，耗时 " + t.stop().getExecutingTime() + "ms！");
             } catch (Exception ex) {
-                this.getPlugin().getLogger().info(" &8• &cError with enabling hook " + hook.getName() + ", reason: " + ex.getMessage());
+                this.getPlugin().getLogger().info(" &8• &c启用钩子 " + hook.getName() + " 时出错，原因：" + ex.getMessage());
                 this.getPlugin().printError(ex);
             }
         }
@@ -113,9 +113,9 @@ public class HookManager
                 TimingUtil t = TimingUtil.startNew();
                 hook.disable();
                 this.removeLoaded(hook);
-                this.getPlugin().getLogger().info(" &8• &rSuccessfully disabled hook " + hook.getName() + " in " + t.stop().getExecutingTime() + "ms!");
+                this.getPlugin().getLogger().info(" &8• &r成功禁用钩子 " + hook.getName() + "，耗时 " + t.stop().getExecutingTime() + "ms！");
             } catch (Exception ex) {
-                this.getPlugin().getLogger().info(" &8• &cError with disabling hook " + hook.getName() + ", reason: " + ex.getMessage());
+                this.getPlugin().getLogger().info(" &8• &c禁用钩子 " + hook.getName() + " 时出错，原因：" + ex.getMessage());
                 this.getPlugin().printError(ex);
             }
         }

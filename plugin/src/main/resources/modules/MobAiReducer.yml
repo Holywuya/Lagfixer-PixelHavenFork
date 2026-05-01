@@ -1,18 +1,18 @@
-# A server restart is required to apply changes.
+# 需要重启服务器才能应用更改。
 MobAiReducer:
   enabled: true
-  worlds: # Use '*' to enable for all worlds.
+  worlds: # 使用 '*' 启用所有世界。
     - '*'
   values:
-    collides: true # Disabling this option allows storing up to 2x more creatures, but may currently prevent arrows from hitting optimized entities.
-    silent: false # Disables audio packets, improving performance for large farms.
+    collides: true # 禁用此选项可存储多达2倍的生物，但可能阻止箭矢命中优化的实体。
+    silent: false # 禁用音频数据包，提升大型农场的性能。
     async: true
-    force_load: true # Overwrites entity AI on plugin reload.
-    click_event: true # Sends info when a player clicks on a creature (disabled by the developer).
-    purge_interval: 30 # The purge frequency of the cache for mobs with optimized MobAI is defined in seconds. It does not remove animals from the world — it only removes them from the internal WeakHashMap to prevent a memory leak.
-    ignore_models: true # If "true" the MobAiReducer won't apply to entities from ModelEngine or MythicMobs
+    force_load: true # 在插件重载时覆盖实体 AI。
+    click_event: true # 玩家点击生物时发送信息（已被开发者禁用）。
+    purge_interval: 30 # 优化 MobAI 的生物缓存清理频率（秒）。不会从世界中移除生物——仅从内部 WeakHashMap 中移除以防止内存泄漏。
+    ignore_models: true # 若为"true"，MobAiReducer 不会应用于 ModelEngine 或 MythicMobs 的实体
 
-    # List of triggered spawn reasons. Spawn reasons: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+    # 触发的生成原因列表。生成原因：https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
     spawn_reasons:
       - NATURAL
       - SPAWNER_EGG
@@ -23,19 +23,19 @@ MobAiReducer:
       - ENDER_PEARL
       - COMMAND
 
-    # Entities that will have their mob AI and pathfinder system replaced.
+    # 将被替换 Mob AI 和寻路系统的实体。
     entities:
       animals: true
       monsters: true
       villagers: false
-      tameable: false # Pets (e.g. wolves, horses, cats, llamas, parrots).
-      birds: false # Flying entities (e.g. bees, parrots).
+      tameable: false # 宠物（如狼、马、猫、羊驼、鹦鹉）。
+      birds: false # 飞行实体（如蜜蜂、鹦鹉）。
       others: true
 
-    # If "true" only listed entities be optimized; if "false", all unlisted entities be optimized
+    # 若为"true"仅优化列表中的实体；若为"false"优化所有未列出的实体
     list_mode: false
 
-    # Entity types: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+    # 实体类型：https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
     list:
       - WOLF
       - MOOSHROOM
@@ -45,13 +45,13 @@ MobAiReducer:
       - WARDEN
 
     pathfinder:
-      # If "true" pathfinder will keep dedicated pathfinders to the entities (e.g. creeper explosion)
+      # 若为"true"寻路器将保留实体的专属寻路器（如苦力怕爆炸）
       keep_dedicated: true
 
-      # If "true" only listed pathfinders will be removed; if "false", all unlisted pathfinders will be removed
+      # 若为"true"仅移除列表中的寻路器；若为"false"移除所有未列出的寻路器
       list_mode: false
 
-      # List of pathfinders that contain a given phrase in the class name
+      # 类名中包含指定短语的寻路器列表
       list:
         - AttackableTarget
         - HurtByTarget
@@ -70,27 +70,27 @@ MobAiReducer:
     animals:
       tempt:
         enabled: true
-        # Player search range.
+        # 玩家搜索范围。
         range: 6.25
-        # Movement speed.
+        # 移动速度。
         speed: 1.25
-        # Player search cooldown (in ticks).
+        # 玩家搜索冷却时间（刻）。
         cooldown: 30
-        # Villagers follow players holding emeralds.
+        # 村民跟随持有绿宝石的玩家。
         villagers: true
-        # If false, only the main hand is checked.
+        # 若为 false，仅检查主手。
         trigger_both_hands: true
-        # Calls EntityTargetEvent with Reason: Tempt.
+        # 以 Tempt 原因调用 EntityTargetEvent。
         event: false
-        # Not recommended, but can optimize packet flow
+        # 不推荐，但可以优化数据包流
         teleport: false
       breed:
         enabled: true
-        # Partner search range.
+        # 伴侣搜索范围。
         range: 5.0
-        # Movement speed.
+        # 移动速度。
         speed: 1.0
-        # Calls EntityTargetEvent with Reason: Custom.
+        # 以 Custom 原因调用 EntityTargetEvent。
         event: false
-        # Not recommended, but can optimize packet flow
+        # 不推荐，但可以优化数据包流
         teleport: false

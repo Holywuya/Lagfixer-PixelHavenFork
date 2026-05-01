@@ -35,8 +35,8 @@ public class LagFixer extends JavaPlugin {
         this.loadManager(new UpdaterManager(this));
         this.loadManager(new ModuleManager(this));
         this.loadManager(new CommandManager(this));
-        this.getLogger().info("&fRemember to leave a rating!&r &e&l★ ★ ★ ★ ★");
-        this.getLogger().info("&c❤ &fSupport us &e&nhttps://ko-fi.com/lajczik");
+        this.getLogger().info("&f请留下评分！&r &e&l★ ★ ★ ★ ★");
+        this.getLogger().info("&c❤ &f支持我们 &e&nhttps://ko-fi.com/lajczik");
     }
 
     @Override
@@ -45,10 +45,10 @@ public class LagFixer extends JavaPlugin {
         while (it.hasNext()) {
             AbstractManager manager = it.next();
             try {
-                this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &fDisabling manager...");
+                this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &f正在禁用管理器...");
                 TimingUtil t = TimingUtil.startNew();
                 manager.disable();
-                this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &fDisabled manager in &e" + t.stop().getExecutingTime() + "ms&f!");
+                this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &f管理器已禁用，耗时 &e" + t.stop().getExecutingTime() + "ms&f！");
             } catch (Exception ex) {
                 this.printError(ex);
             }
@@ -60,9 +60,9 @@ public class LagFixer extends JavaPlugin {
     }
 
     public void sendHeader() {
-        this.getLogger().info("&fRemember to leave a rating!&r &e&l★ ★ ★ ★ ★" +
+        this.getLogger().info("&f请留下评分！&r &e&l★ ★ ★ ★ ★" +
                 "\n\n\n\n\n" +
-                "\n&fLagFixer " + this.getDescription().getVersion() + " - Best Performance Solution!&r" +
+                "\n&fLagFixer " + this.getDescription().getVersion() + " - 最佳性能解决方案！&r" +
                 "\n░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░" +
                 "\n░██╗░░░░░░█████╗░░██████╗░░░███████╗██╗██╗░░██╗███████╗██████╗░░" +
                 "\n░██║░░░░░██╔══██╗██╔════╝░░░██╔════╝██║╚██╗██╔╝██╔════╝██╔══██╗░" +
@@ -80,10 +80,10 @@ public class LagFixer extends JavaPlugin {
         }
         this.managers.add(manager);
         try {
-            this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &fEnabling manager...");
+            this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &f正在启用管理器...");
             TimingUtil t = TimingUtil.startNew();
             manager.load();
-            this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &fEnabled manager in &e" + t.stop().getExecutingTime() + "ms&f!");
+            this.getLogger().info("&8(&e" + manager.getClass().getSimpleName() + "&8) &7-> &f管理器已启用，耗时 &e" + t.stop().getExecutingTime() + "ms&f！");
         } catch (Exception ex) {
             this.printError(ex);
         }

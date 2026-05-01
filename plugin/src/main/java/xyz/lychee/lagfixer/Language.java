@@ -68,14 +68,14 @@ public class Language {
 
     public Component getComponent(String key, boolean prefix, TagResolver.Single... placeholders) {
         if (!this.values.containsKey(key)) {
-            return Component.text("Unknown value - " + key);
+            return Component.text("未知值 - " + key);
         }
         return createComponent(this.values.get(key), prefix, placeholders);
     }
 
     public String getString(String key, boolean prefix, TagResolver.Single... placeholders) {
         Component component = this.getComponent(key, prefix, placeholders);
-        return component == null ? "Unknown value - " + key : Language.getSerializer().serialize(component);
+        return component == null ? "未知值 - " + key : Language.getSerializer().serialize(component);
     }
 }
 
