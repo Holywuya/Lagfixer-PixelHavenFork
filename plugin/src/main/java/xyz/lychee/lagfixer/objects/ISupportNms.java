@@ -23,4 +23,3 @@ public abstract class AbstractSupportNms implements Listener {
 
     public abstract int getPlayerPing(Player player);
 }
-
